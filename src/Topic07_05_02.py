@@ -1,12 +1,15 @@
 import turtle
 import random
-
+from threading import Lock
 t = turtle.Pen()
 # #RRGGBB
 t.speed(0)
 t.hideturtle()
 turtle.bgcolor("magenta")
-# colors = ["red", "orange", "yellow", "green", "blue", "purple", "white"]
+# mutex_lock = Lock()
+number_of_circles = int(turtle.numinput("сколько смайлов",
+                                        "сколько смайликов вы хотите? ",
+                                        5))
 
 
 def draw_smiley(x, y):
@@ -45,21 +48,16 @@ def draw_smiley(x, y):
     t.penup()
 
 
-def draw_kaleido(x, y):
-    # t.pencolor(random.choice(colors))
-    # size = random.randint(10, 40)
-    draw_smiley(x, y)
-    draw_smiley(-x, y)
-    draw_smiley(x, -y)
-    draw_smiley(-x, -y)
-
-
-def draw_spiral(x, y):
-    t.penup()
-    t.setpos(x, y)
+    # mutex_lock.release()
+for n in range(number_of_circles):
+    x = random.randrange(-turtle.window_width() // 2,
+                         turtle.window_width() // 2)
+    y = random.randrange(-turtle.window_height() // 2,
+                         turtle.window_height() // 2)
     t.pendown()
+    draw_smiley(x, y)
+    t.penup()
 
 
-
-turtle.onscreenclick(draw_kaleido)
+turtle.onscreenclick(draw_smiley)
 turtle.mainloop()
