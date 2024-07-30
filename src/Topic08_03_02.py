@@ -1,11 +1,11 @@
 import pygame
 import sys
 
-
-
+window_height = 710
+window_width = 1366
 def main():
     pygame.init()
-    screen = pygame.display.set_mode([800, 600])
+    screen = pygame.display.set_mode([window_width, window_height])
     keepGoing = True
     pic = pygame.image.load("ferderta2.png")
     colorkey = pic.get_at((0, 0))
@@ -15,7 +15,9 @@ def main():
     BLACK = (0, 0, 0)
     timer = pygame.time.Clock()
     speedx = 5
-    speedy = 5
+    speedy = 2.5
+
+    # screen.fill(BLACK)
     while keepGoing:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -26,14 +28,16 @@ def main():
 
         picx += speedx
         picy += speedy
-        if picx <= 0 or picx + pic.get_width() >= 800:
+        if picx <= 0 or picx + pic.get_width() >= window_width:
             speedx = -speedx
-        if picy <= 0 or picy + pic.get_height() >= 600:
+        if picy <= 0 or picy + pic.get_height() >= window_height:
             speedy = -speedy
-        screen.fill(BLACK)
+        # screen.blit(pic, (picx, picy))
+        # screen.fill(BLACK)
         screen.blit(pic, (picx, picy))
         pygame.display.update()
-        timer.tick(60)
+        timer.tick(90)
+
 
     pygame.quit()
 
