@@ -41,7 +41,7 @@ def Calculate(choises):
     for person, personChoises in choises.items():
         for rec in personChoises:
             key = list(rec.keys())[0]
-            result[key] = result.setdefault(key, 0) + rec[key]d
+            result[key] = result.setdefault(key, 0) + rec[key]
     return result
 
 
@@ -52,7 +52,6 @@ def ShowResult(calculated, dishes):
 
 
 def main():
-d
     for person in range(CountPeople):
         ShowMenu(dishes)
         choises[person] = []
@@ -67,23 +66,22 @@ d
                 # if chosenDish > 9:
                 #     print("{} - не коректно.".format(chosenDish))
                 if chosenDish == 0:
-                    answer = input("Точно вы хотите выйти (Yes / No)? ")d
+                    answer = input("Точно вы хотите выйти (Yes / No)? ")
                     if answer == "Y" or answer == "y" or answer == "Yes" or answer == "yes":
                         exit(0)
 
                 chosenDishes[dishNumber] = chosenDish
-                askAgain = Falsed
+                askAgain = False
                 for d in range(dishNumber):
                     if chosenDishes[d] == chosenDish:
-                        askAgain = Trueg
+                        askAgain = True
                         break
                 if not askAgain:
                     choises[person].append({chosenDish: 100/choisesCount})
     calculated = Calculate(choises)
     ShowResult(calculated, dishes)
 
-d
+
 if __name__ == "__main__":
     main()
     sys.exit()
-d
