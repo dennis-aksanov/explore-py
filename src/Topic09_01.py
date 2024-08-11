@@ -39,7 +39,6 @@ class Smiley(pygame.sprite.Sprite):
         bubble.set_colorkey(colorkey)
         self.image = bubble
         self.scale = random.randrange(10, 100)
-        # tmpImage = self.image(self.scale, self.scale)
         self.image = pygame.transform.scale(self.image, (self.scale, self.scale))
         self.rect = self.image.get_rect()
         self.pos = pos
@@ -52,10 +51,6 @@ class Smiley(pygame.sprite.Sprite):
     def update(self):
         self.rect.x += self.xvel
         self.rect.y += self.yvel
-        # if self.rect.x <= 0 or self.rect.x > screen.get_width() - self.scale:
-        #     self.xvel = - self.xvel
-        # if self.rect.y <= 0 or self.rect.y > screen.get_width() - self.scale:
-        #     self.yvel = -self.yvel
         if self.rect.x <= 0 or self.rect.x > screen.get_width() - self.scale:
             sprite_list.remove(self)
         if self.rect.y <= 0 or self.rect.y > screen.get_width() - self.scale:
@@ -63,19 +58,8 @@ class Smiley(pygame.sprite.Sprite):
 
 
 def main():
-    # window_height = 710
-    # window_width = 1366
-    # pygame.init()
-    # screen = pygame.display.set_mode([window_width, window_height])
     mouseDown = False
     keepGoing = True
-    # pic = pygame.image.load("ferderta2.png")
-    # colorkey = pic.get_at((0, 0))
-    # pic.set_colorkey(colorkey)
-    # BLACK = (0, 0, 0)
-    # pygame.display.set_caption("pop a smiley")
-    # sprite_list = pygame.sprite.Group()
-    # clock = pygame.time.Clock()
 
     while keepGoing:
         for event in pygame.event.get():
