@@ -1,7 +1,7 @@
 import pygame
 import sys
 import random
-
+import time
 
 class Limits:
     def __init__(self, min, max):
@@ -34,21 +34,28 @@ def getColorByKey(keys):
         pygame.K_6: "purple"
     }
 
+
     for key in colors.keys():
         if keys[key]:
             return colors[key]
     return ""
 
 
+def startCountdown(delay):
+    time.sleep(delay)
+
 gameSettings = [
     GameSettings(Limits(-6, 6), Limits(2, 5), 5, 1),
     GameSettings(Limits(-7, 7), Limits(3, 6), 4, 2),
     GameSettings(Limits(-9, 9), Limits(5, 8), 3, 3),
     GameSettings(Limits(-15, 15), Limits(9, 12), 2, 4),
-    GameSettings(Limits(-17, 17), Limits(13, 15), 1, 5),
-    GameSettings(Limits(-22, 22), Limits(13, 17), 1, 7)
+    GameSettings(Limits(-18, 18), Limits(13, 16), 2, 5),
+    GameSettings(Limits(-22, 22), Limits(13, 17), 1, 7),
+    GameSettings(Limits(-29, 29), Limits(15, 19), 1, 9),
+    GameSettings(Limits(-32, 32), Limits(16, 21), 1, 11)
 ]
-difficultLevel = input("difficulty: easy - 1,\nnormal - 2,\nhard - 3,\ndemon - 4,\nnightmare - 5,\nimpossible - 6\n")
+
+difficultLevel = input("difficulty: easy - 1,\nnormal - 2,\nhard - 3,\ndemon - 4,\nextra-demon - 5,\nsuper extra-demon - 6,\nnightmare - 7,\nimpossible - 8\n")
 level = int(difficultLevel) - 1
 pygame.init()
 window_height = 680
@@ -85,8 +92,11 @@ points = 0
 lives = gameSettings[level].lives
 font = pygame.font.SysFont('Times', 24)
 
-speedx = genXSpeed(level, gameSettings[level].speedXLimit)
-speedy = random.randint(gameSettings[level].speedYLimit.min, gameSettings[level].speedYLimit.max)
+# speedx = genXSpeed(level, gameSettings[level].speedXLimit)
+# speedy = random.randint(gameSettings[level].speedYLimit.min, gameSettings[level].speedYLimit.max)
+speedx = 0
+speedy = 0
+
 def drawString(x, y, str):
     text = font.render(str, True, RED)
     text_rect = text.get_rect()
@@ -95,7 +105,15 @@ def drawString(x, y, str):
     screen.blit(text, text_rect)
 
 
+firstStart = True
+startTime = time.monotonic() + 3.0;
+
 while keepGoing:
+    if firstStart and time.monotonic() > startTime:
+        speedx = genXSpeed(level, gameSettings[level].speedXLimit)
+        speedy = gameSettings[level].speedYLimit.min
+        firstStart = False
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             keepGoing = False
@@ -116,7 +134,9 @@ while keepGoing:
         speedy = -speedy
 
     if lives <= 0:
-        print("points {}".format(points))
+        print("")
+        print("")
+        print("points: {}".format(points))
         print("count of bubbles: {}".format(int(points / gameSettings[level].pointsInc)))
         exit()
 
@@ -153,7 +173,7 @@ while keepGoing:
     strLives = "Lives: {}".format(lives)
     strPoints = "Points: {}".format(points)
     strCountOfBubbles = "count of bubbles: {}".format(int(points / gameSettings[level].pointsInc))
-    x = window_width/2 - 50;
+    x = 0
     drawString(x, 10, strLives)
     drawString(x, 30, strPoints)
     drawString(x, 50, strCountOfBubbles)
