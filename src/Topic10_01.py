@@ -63,7 +63,6 @@ window_width = 1360
 screen = pygame.display.set_mode([window_width, window_height])
 background = pygame.image.load("feto1.jpg")
 background = pygame.transform.scale(background, (window_width, window_height))
-paddleColor = random.randint(0, 5)
 pygame.display.set_caption("Smiley Explosion")
 bubbles = [pygame.image.load("bubble.png"),
            pygame.image.load("bubble1.png"),

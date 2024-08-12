@@ -11,4 +11,4 @@ for n in range(100):
     locations[n] = (random.randint(0,800),random.randint(0,600))
     sizes[n] = (random.randint(10, 100))
 for n in range(100):
-    pygame.draw.circle(screen, colors[n], locations[n], sizes[n])
+    pygame.draw.circle(creen, colors[n], locations[n], sizes[n])
