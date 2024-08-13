@@ -24,8 +24,8 @@ gameSettings = [
 ]
 
 
-def drawString(x, y, str):
-    text = font.render(str, True, RED)
+def drawString(x, y, color, str):
+    text = font.render(str, True, color)
     text_rect = text.get_rect()
     text_rect.x = x
     text_rect.y = y
@@ -70,16 +70,39 @@ class GameField:
 
 
 class Snake:
-    def __init__(self, coord):
+    def __init__(self, coord, appleSize):
         self.coord = coord
         self.body = [coord]
         self.direction = Coord(1, 0)
+        self.appleSize = appleSize
 
-    def step(self):
+
+    def setDirection(self, keyPressed):
+        if key_pressed[pygame.K_a] or key_pressed[pygame.K_LEFT]:
+            newDirection = Coord(-1, 0)
+        if key_pressed[pygame.K_d] or key_pressed[pygame.K_RIGHT]:
+            newDirection = Coord(+1, 0)
+        if key_pressed[pygame.K_w] or key_pressed[pygame.K_UP]:
+            newDirection = Coord(0, -1)
+        if key_pressed[pygame.K_s] or key_pressed[pygame.K_DOWN]:
+            newDirection = Coord(0, +1)
+        if newDirection.x != 0 and self.direction.x != 0 or newDirection.y != 0 and self.direction.y != 0:
+            return
+        else:
+            self.direction = newDirection
+
+
+    def step(self) -> Coord:
         nextCoord = Coord(self.body[0].x + self.direction.x,
                           self.body[0].y + self.direction.y)
         self.body.insert(0, nextCoord)
-
+        if self.appleSize > 0:
+            self.appleSize = self.appleSize - 1
+            return None
+        else:
+            tail = self.body[-1]
+            self.body.pop(-1)
+            return tail
 
 
 print("1000 - normal,\n10000 - really good,\n50000 - great,\n100000 - fantastic,\n1000000 - god\n")
@@ -96,7 +119,7 @@ cellSize = 10
 gameFieldSize = Size(100, 50)
 
 gameField = GameField(size=gameFieldSize)
-snake = Snake(Coord(gameField.size.width / 2, gameField.size.height / 2))
+snake = Snake(Coord(gameField.size.width / 2, gameField.size.height / 2), 9)
 
 # window_height = 680
 # window_width = 1360
@@ -113,8 +136,11 @@ snakeCoordChanege = Coord(1, 0)
 snakeHeadSize = Size(cellSize, cellSize)
 snakeLength = 0
 scores = 0
+strScores = ""
+strSnakeLength = ""
 directionChanged = True
 keepGoing = True
+
 while keepGoing:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -122,17 +148,7 @@ while keepGoing:
         if event.type == pygame.KEYDOWN:
             directionChanged = True
             key_pressed = pygame.key.get_pressed()
-            # newSnakeColor = getColorByKey(key_pressed)
-            # if newSnakeColor != "":
-            #     snakeColor = newSnakeColor
-            if key_pressed[pygame.K_a] or key_pressed[pygame.K_LEFT]:
-                snakeCoordChanege = Coord(-1, 0)
-            if key_pressed[pygame.K_d] or key_pressed[pygame.K_RIGHT]:
-                snakeCoordChanege = Coord(+1, 0)
-            if key_pressed[pygame.K_w] or key_pressed[pygame.K_UP]:
-                snakeCoordChanege = Coord(0, -1)
-            if key_pressed[pygame.K_s] or key_pressed[pygame.K_DOWN]:
-                snakeCoordChanege = Coord(0, +1)
+            snake.setDirection(key_pressed)
     if level != 8 and level != 7:
         snakeColor = colors[random.randint(0, 5)]
     else:
@@ -145,14 +161,7 @@ while keepGoing:
                 snakeColor = BLACK
         else:
            snakeColor = BLACK
-    # snakeCoord.x = snakeCoord.x + snakeCoordChanege.x
-    # snakeCoord.y = snakeCoord.y + snakeCoordChanege.y
-    snake.body[0].x = snake.body[0].x + snakeCoordChanege.x
-    snake.body[0].y = snake.body[0].y + snakeCoordChanege.y
-    # if (snakeCoord.x * cellSize >= window_width
-    #         or snakeCoord.x * cellSize < 0
-    #         or snakeCoord.y * cellSize >= window_height
-    #         or snakeCoord.y * cellSize < 0):
+    tail = snake.step()
     if (snake.body[0].x > gameField.size.width
             or snake.body[0].x < 0
             or snake.body[0].y > gameField.size.height
@@ -161,21 +170,24 @@ while keepGoing:
         print("snake length: {}".format(snakeLength))
         print("Scores: {}".format(int(scores)))
         exit()
-    # pygame.draw.rect(screen, snakeColor, (snakeCoord.x * cellSize,
-    #                                       snakeCoord.y * cellSize,
-    #                                       snakeHeadSize.width,
-    #                                       snakeHeadSize.height))
+    if tail != None:
+        pygame.draw.rect(screen, BLACK, (tail.x * cellSize,
+                                              tail.y * cellSize,
+                                              cellSize,
+                                              cellSize))
     pygame.draw.rect(screen, snakeColor, (snake.body[0].x * cellSize,
                                           snake.body[0].y * cellSize,
                                           cellSize,
                                           cellSize))
+
     pygame.display.update()
-    screen.fill(BLACK)
+    drawString(1, 10, BLACK, strSnakeLength)
+    drawString(1, 35, BLACK, strScores)
     scores = scores + gameSettings[level].scoreInc
     snakeLength = snakeLength + 1
     strScores = "Scores: {}".format(int(scores))
     strSnakeLength = "Snake length: {}".format(snakeLength)
-    drawString(1, 10, strSnakeLength)
-    drawString(1, 35, strScores)
+    drawString(1, 10, RED, strSnakeLength)
+    drawString(1, 35, RED, strScores)
     timer.tick(gameSettings[level].ticks)
 pygame.quit()
