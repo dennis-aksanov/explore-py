@@ -55,6 +55,7 @@ gameSettings = [
     GameSettings(Limits(-32, 32), Limits(16, 21), 1, 11)
 ]
 
+
 difficultLevel = input("difficulty: easy - 1,\nnormal - 2,\nhard - 3,\ndemon - 4,\nextra-demon - 5,\nsuper extra-demon - 6,\nnightmare - 7,\nimpossible - 8\n")
 level = int(difficultLevel) - 1
 pygame.init()
@@ -88,6 +89,7 @@ paddley = window_height - 90
 picw = bubble.get_width()-20
 pich = bubble.get_height()-20
 points = 0
+paddleColor = RED
 lives = gameSettings[level].lives
 font = pygame.font.SysFont('Times', 24)
 

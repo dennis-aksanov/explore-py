@@ -149,8 +149,6 @@ difficultLevel = input("difficulty: easy - 1,\nnormal - 2,\nhard - 3,\ndemon - 4
 level = int(difficultLevel) - 1
 print("difficulte for game was set")
 print("\n=============\n")
-# snakeHeadSize = input("выберите размер змейки от 0 до 40: \n")
-# snakeHeadSize = int(snakeHeadSize)
 colors = ["red", "orange", "yellow", "green", "blue", "purple"]
 timer = pygame.time.Clock()
 RED = (255, 0, 0)
