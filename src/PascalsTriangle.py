@@ -27,9 +27,12 @@ def drawString(x, y, str):
     text_rect.y = y
     screen.blit(text, text_rect)
 
-lineN0 = numpy.array(0)
-lineN1 = numpy.array(1)
-while level < lines:
+
+# lineN0 = numpy.array([1])
+# lineN1 = numpy.array([1, 1])
+lineN0 = numpy.ones((1,), dtype=int)
+lineN1 = numpy.ones((2,), dtype=int)
+while level <= lines:
     y = level * 24 + 10
     countElem = 0
     while countElem < level:
@@ -37,14 +40,24 @@ while level < lines:
         # numbers = random.randint(1, 40)
         # strNumbers = "{}".format(numbers)
         # drawString(x, y, strNumbers)
-        lineN1[countElem] = 1
+        if countElem > 1:
+            if countElem == 0:
+                lineN1[countElem] = 1
+                lineN1[level - 1] = 1
+            else:
+                if countElem <= level / 2:
+                    lineN1[countElem] = lineN0[countElem-1] + lineN0[countElem]
+                    lineN1[level - countElem] = lineN1[countElem]
+
         drawString(x, y, "{}".format(lineN1[countElem]))
 
         countElem = countElem + 1
 
-    lineN0 = lineN1
-    lineN1 = ()
+    # lineN0 = lineN1
     level = level + 1
+    if level > 1:
+        lineN0 = lineN1
+        lineN1 = numpy.ones((level,), dtype=int)
     pygame.display.update()
 time.sleep(5)
 pygame.quit()
