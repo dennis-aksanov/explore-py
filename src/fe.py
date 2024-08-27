@@ -42,6 +42,7 @@ fed = 0
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 gameFieldSize = Size(60, 30)
 gameField = GameField(size=gameFieldSize)
 cellSize = 99
@@ -53,9 +54,13 @@ font = pygame.font.SysFont('Times', 24)
 mouseDown = False
 keepGoing = True
 x = 0
+pygame.draw.line(screen, WHITE, (cellSize*5, cellSize*2), (cellSize*5, cellSize*5), 5)
+pygame.draw.line(screen, WHITE, (cellSize*8, cellSize*2), (cellSize*8, cellSize*5), 5)
+pygame.draw.line(screen, WHITE, (cellSize*5, cellSize*2), (cellSize*8, cellSize*2), 5)
+pygame.draw.line(screen, WHITE, (cellSize*5, cellSize*5), (cellSize*8, cellSize*5), 5)
 def drawX(x, y):
-    pygame.draw.line(screen, RED, (x * cellSize + 5, y * cellSize + 5), ((x+1) * cellSize - 5, (y+1) * cellSize - 5), 2)
-    pygame.draw.line(screen, RED, (x * cellSize + 5, (y+1) * cellSize - 5), ((x+1) * cellSize - 5, y * cellSize + 5), 2)
+    pygame.draw.line(screen, RED, (x * cellSize + 5, y * cellSize + 5), ((x+1) * cellSize - 5, (y+1) * cellSize - 5), 3)
+    pygame.draw.line(screen, RED, (x * cellSize + 5, (y+1) * cellSize - 5), ((x+1) * cellSize - 5, y * cellSize + 5), 3)
 
 
 def drawO(x, y):
@@ -69,7 +74,13 @@ while keepGoing:
             coord = pygame.mouse.get_pos()
             mouseX = coord[0]
             mouseY = coord[1]
-            mouseDown = True
+            if (mouseX < cellSize * 5
+                    or mouseX > cellSize * 8
+                    or mouseY < cellSize * 2
+                    or mouseY > cellSize * 5):
+                mouseDown = False
+            else:
+                mouseDown = True
 
         if mouseDown:
             if fed == 0:
