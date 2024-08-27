@@ -1,3 +1,4 @@
+import time
 import pygame
 import numpy as np
 
@@ -33,12 +34,15 @@ timer = pygame.time.Clock()
 cellSize = 99
 window_height = 680
 window_width = 1360
-fed = 0
+fed = 1
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 gameFieldSize = Size(60, 30)
+field = np.zeros([3, 3], dtype=int)
+
+
 gameField = GameField(size=gameFieldSize)
 screen = pygame.display.set_mode([gameField.size.width * cellSize,
                                   gameFieldSize.height * cellSize])
@@ -55,6 +59,15 @@ pygame.draw.line(screen, WHITE, (cellSize*5, cellSize*2), (cellSize*8, cellSize*
 pygame.draw.line(screen, WHITE, (cellSize*5, cellSize*5), (cellSize*8, cellSize*5), 5)
 
 
+def isWin(coord, sign):
+    if ((field[coord[0]][0] == sign and field[coord[0]][1] == sign and field[coord[0]][2] == sign)
+        or (field[0][coord[1]] == sign and field[1][coord[1]] == sign and field[2][coord[1]] == sign)
+        or (field[0][0] == field[1][1] and field[0][0] == field[2][2] and field[0][0] == sign)
+        or (field[2][0] == field[1][1] and field[2][0] == field[0][2] and field[2][0] == sign)):
+        return True
+    return False
+
+
 def drawX(x, y):
     pygame.draw.line(screen, RED, (x * cellSize + 5, y * cellSize + 5), ((x+1) * cellSize - 5, (y+1) * cellSize - 5), 4)
     pygame.draw.line(screen, RED, (x * cellSize + 5, (y+1) * cellSize - 5), ((x+1) * cellSize - 5, y * cellSize + 5), 4)
@@ -62,6 +75,7 @@ def drawX(x, y):
 
 def drawO(x, y):
     pygame.draw.circle(screen, BLUE, (x * cellSize + cellSize / 2, y * cellSize + cellSize / 2), cellSize / 2 - 5, 4)
+
 
 while keepGoing:
     for event in pygame.event.get():
@@ -80,12 +94,24 @@ while keepGoing:
                 mouseDown = True
 
         if mouseDown:
-            if fed == 0:
-                drawX(int(mouseX / cellSize), int(mouseY / cellSize))
-                fed = 1
-            else:
-                drawO(int(mouseX / cellSize), int(mouseY / cellSize))
-                fed = 0
+            fieldCoord = (int(coord[0] / cellSize) - 5, int(coord[1] / cellSize) - 2)
+            if field[fieldCoord[0]][fieldCoord[1]] == 0:
+                field[fieldCoord[0]][fieldCoord[1]] = fed
+                if fed == 1:
+                    drawX(int(mouseX / cellSize), int(mouseY / cellSize))
+                    # fed = 2
+                else:
+                    drawO(int(mouseX / cellSize), int(mouseY / cellSize))
+                    # fed = 1
+                if isWin(fieldCoord, fed):
+                    print("The {} is win".format(fed))
+                    pygame.quit()
+                    exit()
+                if fed == 1:
+                    fed = 2
+                else:
+                    fed = 1
+
             mouseDown = False
     pygame.display.update()
 pygame.quit()
